@@ -40,10 +40,10 @@ class headerHandler(ContentHandler):
         if self.inContent:
             self.theContent = self.theContent + chars
 
+
 def getNews():
     parser = make_parser()
     handler = headerHandler()
     parser.setContentHandler(handler)
     parser.parse("http://barrapunto.com/index.rss")
-    parsedFile = open("barrapunto.txt", "w")
-    parsedFile.write(handler.html.encode("utf8"))
+    return  "<br><hr>" + handler.html

@@ -1,26 +1,28 @@
-from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseNotFound
 from models import Page
 from xmlbarrapunto import getNews
-import codecs
+from django.core.cache import caches
+
+
+cache = caches['default']
 
 
 def updateNews(request):
-    getNews()
-    return HttpResponse ("News updated<br>")
+    news = getNews()
+    cache.set('news', news)
+    return HttpResponse("News updated<br>")
+
 
 @csrf_exempt
 def processRequest(request, resource):
     if request.method == "GET":
         try:
             content = Page.objects.get(name=resource)
-            try:
-                parsedFile = codecs.open("barrapunto.txt", "r", "utf-8")
-            except IOError:
-                updateNews(request)
-                parsedFile = codecs.open("barrapunto.txt", "r", "utf-8")
-            news = "<br><hr>" + parsedFile.read()
+            news = cache.get('news')
+            if news == None:
+                news = getNews()
+                cache.set('news', news)
             return HttpResponse(content.content + news)
         except Page.DoesNotExist:
             return HttpResponseNotFound(resource + " not found")

@@ -45,5 +45,4 @@ def getNews():
     handler = headerHandler()
     parser.setContentHandler(handler)
     parser.parse("http://barrapunto.com/index.rss")
-    parsedFile = open("barrapunto.txt", "w")
-    parsedFile.write(handler.html)
+    return  "<br><hr>" + handler.html

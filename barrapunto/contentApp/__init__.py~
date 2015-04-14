@@ -1,1 +1,18 @@
-barraPunto = "tonto"
+import signal
+import sys
+
+
+def update(signum, frame):
+    
+    print "UPDATING!"
+    signal.alarm(10)
+
+def closing(signum, frame):
+    print "closing server"
+    signal.alarm(0)
+    sys.exit(0)
+
+print "AAQUI"
+#signal.signal(signal.SIGALRM, update)
+#signal.signal(signal.CTRL_BREAK_EVENT, closing)
+#signal.alarm(5)
