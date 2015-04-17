@@ -27,8 +27,12 @@ def processRequest(request, resource):
         except Page.DoesNotExist:
             return HttpResponseNotFound(resource + " not found")
     elif request.method == "PUT":
-        newContent = Page(name=resource, content=request.body)
-        newContent.save()
+        try:
+            newPage = Page.objects.get(name=resource)
+            newPage.page = request.body
+        except Page.DoesNotExist:
+            newPage = Page(name = resource, page = request.body)
+        newPage.save()
         return HttpResponse(resource + " added to the list")
     else:
         return HttpResponse(status=403)
